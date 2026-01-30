@@ -1,5 +1,6 @@
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
+import { PromoSlider } from "@/components/PromoSlider";
 import { DemoSubmitForm } from "@/components/DemoSubmitForm";
 import { ArrowLeft } from "lucide-react";
 import { Link } from "react-router-dom";
@@ -53,6 +54,11 @@ const SubmitDemo = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        {/* Bottom Promo Slider */}
+        <div className="mt-16">
+          <PromoSlider variant="bottom" />
         </div>
       </main>
 
