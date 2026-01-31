@@ -14,16 +14,284 @@ export type Database = {
   }
   public: {
     Tables: {
-      [_ in never]: never
+      artists: {
+        Row: {
+          bio: string | null
+          created_at: string
+          genre: string | null
+          id: string
+          image_url: string | null
+          instagram_url: string | null
+          is_active: boolean
+          is_featured: boolean
+          name: string
+          short_bio: string | null
+          slug: string
+          soundcloud_url: string | null
+          spotify_url: string | null
+          updated_at: string
+          youtube_url: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          genre?: string | null
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          name: string
+          short_bio?: string | null
+          slug: string
+          soundcloud_url?: string | null
+          spotify_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          genre?: string | null
+          id?: string
+          image_url?: string | null
+          instagram_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          name?: string
+          short_bio?: string | null
+          slug?: string
+          soundcloud_url?: string | null
+          spotify_url?: string | null
+          updated_at?: string
+          youtube_url?: string | null
+        }
+        Relationships: []
+      }
+      demo_submissions: {
+        Row: {
+          admin_notes: string | null
+          artist_name: string
+          bio: string | null
+          created_at: string
+          email: string
+          genre: string
+          id: string
+          music_link: string
+          status: string
+          updated_at: string
+        }
+        Insert: {
+          admin_notes?: string | null
+          artist_name: string
+          bio?: string | null
+          created_at?: string
+          email: string
+          genre: string
+          id?: string
+          music_link: string
+          status?: string
+          updated_at?: string
+        }
+        Update: {
+          admin_notes?: string | null
+          artist_name?: string
+          bio?: string | null
+          created_at?: string
+          email?: string
+          genre?: string
+          id?: string
+          music_link?: string
+          status?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      events: {
+        Row: {
+          created_at: string
+          description: string | null
+          event_date: string
+          id: string
+          image_url: string | null
+          is_active: boolean
+          is_featured: boolean
+          location: string
+          ticket_price: string | null
+          ticket_url: string | null
+          title: string
+          updated_at: string
+          venue: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          event_date: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          location: string
+          ticket_price?: string | null
+          ticket_url?: string | null
+          title: string
+          updated_at?: string
+          venue: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          event_date?: string
+          id?: string
+          image_url?: string | null
+          is_active?: boolean
+          is_featured?: boolean
+          location?: string
+          ticket_price?: string | null
+          ticket_url?: string | null
+          title?: string
+          updated_at?: string
+          venue?: string
+        }
+        Relationships: []
+      }
+      music_releases: {
+        Row: {
+          apple_music_url: string | null
+          artist_id: string | null
+          artist_name: string
+          cover_url: string | null
+          created_at: string
+          download_url: string | null
+          genre: string | null
+          id: string
+          is_active: boolean
+          is_featured: boolean
+          release_date: string
+          soundcloud_url: string | null
+          spotify_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          apple_music_url?: string | null
+          artist_id?: string | null
+          artist_name: string
+          cover_url?: string | null
+          created_at?: string
+          download_url?: string | null
+          genre?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          release_date?: string
+          soundcloud_url?: string | null
+          spotify_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          apple_music_url?: string | null
+          artist_id?: string | null
+          artist_name?: string
+          cover_url?: string | null
+          created_at?: string
+          download_url?: string | null
+          genre?: string | null
+          id?: string
+          is_active?: boolean
+          is_featured?: boolean
+          release_date?: string
+          soundcloud_url?: string | null
+          spotify_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "music_releases_artist_id_fkey"
+            columns: ["artist_id"]
+            isOneToOne: false
+            referencedRelation: "artists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promo_slides: {
+        Row: {
+          created_at: string
+          display_order: number
+          id: string
+          image_url: string
+          is_active: boolean
+          link: string | null
+          position: string
+          subtitle: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url: string
+          is_active?: boolean
+          link?: string | null
+          position?: string
+          subtitle?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          display_order?: number
+          id?: string
+          image_url?: string
+          is_active?: boolean
+          link?: string | null
+          position?: string
+          subtitle?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string
+          id: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          role: Database["public"]["Enums"]["app_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          role?: Database["public"]["Enums"]["app_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      has_role: {
+        Args: {
+          _role: Database["public"]["Enums"]["app_role"]
+          _user_id: string
+        }
+        Returns: boolean
+      }
     }
     Enums: {
-      [_ in never]: never
+      app_role: "admin" | "user"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -150,6 +418,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      app_role: ["admin", "user"],
+    },
   },
 } as const

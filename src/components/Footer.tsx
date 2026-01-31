@@ -156,6 +156,14 @@ export const Footer = () => {
                 {link.name}
               </Link>
             ))}
+            {/* Hidden admin link */}
+            <Link
+              to="/admin"
+              className="text-xs text-muted-foreground/30 hover:text-muted-foreground transition-colors"
+              title="Admin"
+            >
+              •
+            </Link>
           </div>
         </div>
       </div>
