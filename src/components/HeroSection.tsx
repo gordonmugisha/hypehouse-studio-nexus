@@ -2,7 +2,6 @@ import { Link } from "react-router-dom";
 import { Play, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import heroBg from "@/assets/hero-bg.jpg";
-import logo from "@/assets/hype-house-logo.png";
 
 export const HeroSection = () => {
   return (
@@ -22,15 +21,6 @@ export const HeroSection = () => {
       {/* Content */}
       <div className="relative z-10 container mx-auto px-4 lg:px-8 text-center">
         <div className="max-w-4xl mx-auto">
-          {/* Logo animation */}
-          <div className="mb-8 animate-float">
-            <img
-              src={logo}
-              alt="Hype House Creative"
-              className="h-24 md:h-32 w-auto mx-auto"
-            />
-          </div>
-
           {/* Headline */}
           <h1 className="text-display-lg md:text-display-xl mb-6 animate-slide-up">
             <span className="block">Where Sound</span>

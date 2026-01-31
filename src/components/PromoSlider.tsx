@@ -1,56 +1,54 @@
 import { useState, useEffect } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface PromoSlide {
-  id: number;
-  image: string;
+  id: string;
+  image_url: string;
   title: string;
-  subtitle?: string;
-  link?: string;
+  subtitle: string | null;
+  link: string | null;
+  position: string;
 }
 
-// Placeholder slides - these would be managed by admin in production
-const defaultSlides: PromoSlide[] = [
-  {
-    id: 1,
-    image: "https://images.unsplash.com/photo-1493225457124-a3eb161ffa5f?w=1920&q=80",
-    title: "New Album Out Now",
-    subtitle: "Stream 'Midnight Frequencies' everywhere",
-    link: "/music",
-  },
-  {
-    id: 2,
-    image: "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=1920&q=80",
-    title: "Live in London",
-    subtitle: "March 15, 2024 • O2 Academy Brixton",
-    link: "/events",
-  },
-  {
-    id: 3,
-    image: "https://images.unsplash.com/photo-1598387993211-5e4461c7a4f2?w=1920&q=80",
-    title: "Submit Your Demo",
-    subtitle: "Join the Hype House roster",
-    link: "/submit",
-  },
-];
-
 interface PromoSliderProps {
-  slides?: PromoSlide[];
   variant?: "top" | "bottom";
   className?: string;
 }
 
 export const PromoSlider = ({
-  slides = defaultSlides,
   variant = "top",
   className = "",
 }: PromoSliderProps) => {
+  const [slides, setSlides] = useState<PromoSlide[]>([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isAutoPlaying, setIsAutoPlaying] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    if (!isAutoPlaying) return;
+    const fetchSlides = async () => {
+      const { data, error } = await supabase
+        .from("promo_slides")
+        .select("id, image_url, title, subtitle, link, position")
+        .eq("is_active", true)
+        .order("display_order", { ascending: true });
+
+      if (!error && data) {
+        // Filter by position
+        const filteredSlides = data.filter(
+          (slide) => slide.position === "both" || slide.position === variant
+        );
+        setSlides(filteredSlides);
+      }
+      setIsLoading(false);
+    };
+
+    fetchSlides();
+  }, [variant]);
+
+  useEffect(() => {
+    if (!isAutoPlaying || slides.length === 0) return;
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % slides.length);
     }, 5000);
@@ -72,6 +70,15 @@ export const PromoSlider = ({
     setCurrentIndex(index);
   };
 
+  // Don't render if no slides
+  if (isLoading) {
+    return null;
+  }
+
+  if (slides.length === 0) {
+    return null;
+  }
+
   const heightClass = variant === "top" ? "h-48 md:h-64" : "h-40 md:h-56";
 
   return (
@@ -88,7 +95,7 @@ export const PromoSlider = ({
           >
             {/* Background image */}
             <img
-              src={slide.image}
+              src={slide.image_url}
               alt={slide.title}
               className="absolute inset-0 w-full h-full object-cover"
             />
@@ -117,37 +124,41 @@ export const PromoSlider = ({
       </div>
 
       {/* Navigation arrows */}
-      <Button
-        variant="glass"
-        size="icon"
-        className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full"
-        onClick={goToPrevious}
-      >
-        <ChevronLeft className="h-5 w-5" />
-      </Button>
-      <Button
-        variant="glass"
-        size="icon"
-        className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full"
-        onClick={goToNext}
-      >
-        <ChevronRight className="h-5 w-5" />
-      </Button>
+      {slides.length > 1 && (
+        <>
+          <Button
+            variant="glass"
+            size="icon"
+            className="absolute left-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full"
+            onClick={goToPrevious}
+          >
+            <ChevronLeft className="h-5 w-5" />
+          </Button>
+          <Button
+            variant="glass"
+            size="icon"
+            className="absolute right-4 top-1/2 -translate-y-1/2 h-10 w-10 rounded-full"
+            onClick={goToNext}
+          >
+            <ChevronRight className="h-5 w-5" />
+          </Button>
 
-      {/* Dots indicator */}
-      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-        {slides.map((_, index) => (
-          <button
-            key={index}
-            onClick={() => goToSlide(index)}
-            className={`w-2 h-2 rounded-full transition-all ${
-              index === currentIndex
-                ? "bg-primary w-6"
-                : "bg-foreground/30 hover:bg-foreground/50"
-            }`}
-          />
-        ))}
-      </div>
+          {/* Dots indicator */}
+          <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
+            {slides.map((_, index) => (
+              <button
+                key={index}
+                onClick={() => goToSlide(index)}
+                className={`w-2 h-2 rounded-full transition-all ${
+                  index === currentIndex
+                    ? "bg-primary w-6"
+                    : "bg-foreground/30 hover:bg-foreground/50"
+                }`}
+              />
+            ))}
+          </div>
+        </>
+      )}
     </section>
   );
 };
